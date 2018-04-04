@@ -55,6 +55,9 @@ path-include=/usr/share/locale/currency/*
 path-include=/usr/share/locale/l10n/*
 EOF
 
+# create missing directories, postgres installation fails without these
+mkdir -p /usr/share/man/man{1,2,3,4,5,6,7,8}
+
 cat > /usr/local/sbin/docker-upgrade << EOF
 #!/bin/sh
 set -e
