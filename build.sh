@@ -20,9 +20,11 @@ in
         exit 1
         ;;
 esac
+export SUITE
+export DISTRIBUTION
 
 TEMPDIR="$(mktemp -d baseimage.XXXXXX)"
-TARGET="${TEMPDIR}/target"
+export TARGET="${TEMPDIR}/target"
 
 echo "D: Using tempdir \"${TEMPDIR}\"..."
 
@@ -115,9 +117,16 @@ sudo chroot "${TARGET}" /usr/share/baseimage-helpers/apt-cleanup
 
 for variant in variants/*
 do
-    echo "I: Generate variant \"${variant}\"..."
-    for script in variants/${variant}/*.sh
+    VARIANT="$(basename "${variant}")"
+    echo "I: Generate variant \"${VARIANT}\"..."
+    PARTS="$(find "${variant}" -type f -print |sort)"
+    for script in ${PARTS}
     do
-        echo "D: run script ${script}..."
+        echo "I: Execute \"${script}\" from ${VARIANT}..."
+         sh "${script}"
     done
 done
+
+unset DISTRIBUTION
+unset SUITE
+unset TARGET
