@@ -4,7 +4,7 @@ set -e
 [ -z "${TARGET}" ] && echo "E: Missing target!" && exit 1
 
 echo "I: Add Docker-specific cleanup script..."
-cat > "${TARGET}.docker/usr/share/baseimage-helpers/apt-cleanup.d/docker.sh" << EOF
+cat << EOF |sudo tee "${TARGET}.docker/usr/share/baseimage-helpers/apt-cleanup.d/docker.sh"
 #!/bin/sh
 set -e
 
@@ -16,4 +16,4 @@ rm -rf /usr/share/locale/*
 rm -rf /usr/share/man/*
 EOF
 
-chroot "${TARGET}.docker" sudo sh /usr/share/baseimage-helpers/cleanup.d/docker.sh
+sudo chroot "${TARGET}.docker" sh /usr/share/baseimage-helpers/cleanup.d/docker.sh
