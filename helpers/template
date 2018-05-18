@@ -1,0 +1,14 @@
+#!/bin/sh
+set -e
+
+export DEBIAN_FRONTEND="noninteractive"
+
+SCRIPT_DIR="$(realpath "$(dirname $0)")"
+SCRIPT_NAME="$(echo "$(basename $0)" |cut -d. -f1)"
+
+PARTS="$(find "${SCRIPT_DIR}/${SCRIPT_NAME}.d/" -type f -print |sort)"
+for script in ${PARTS}
+do
+    echo "I: Execute \"${script}\" from ${SCRIPT_NAME}..."
+    sh "${script}"
+done

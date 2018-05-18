@@ -29,6 +29,7 @@ echo "D: Using tempdir \"${TEMPDIR}\"..."
 chroot_mount() {
     local TARGET="$1"
     echo "I: Mounting /dev, /proc, /sys..."
+    [ -z "${TARGET}" ] && echo "W: Missing target, skip..." && return
     sudo mount -o bind /dev "${TARGET}/dev" || true
     sudo mount -t proc none "${TARGET}/proc" || true
     sudo mount -o bind /sys "${TARGET}/sys" || true
@@ -37,6 +38,7 @@ chroot_mount() {
 chroot_umount() {
     local TARGET="$1"
     echo "I: Unmounting /dev, /proc, /sys..."
+    [ -z "${TARGET}" ] && echo "W: Missing target, skip..." && return
     sudo umount -l "${TARGET}/dev" || true
     sudo umount -l "${TARGET}/proc" || true
     sudo umount -l "${TARGET}/sys" || true    
@@ -60,8 +62,12 @@ sudo debootstrap \
 echo "I: Add helper scripts..."
 HELPERDIR="${TARGET}/usr/share/baseimage-helpers"
 sudo mkdir -p "${HELPERDIR}"
-sudo cp helpers/* "${HELPERDIR}/"
-sudo chmod -R +x "${HELPERDIR}/"
+for helper in apt-cleanup apt-setup apt-upgrade
+do
+    cp helpers/template "${HELPERDIR}/${helper}"
+    sudo chmod +x "${HELPERDIR}/${helper}"
+done
+cp -R helpers/*.d "${HELPERDIR}/"
 
 # Generate sources.list
 echo "I: Generate sources.list..."
@@ -101,7 +107,7 @@ cat << EOF |sudo tee "${TARGET}/etc/apt/apt.conf.d/99translations"
 Acquire::Languages "none";
 EOF
 
-chroot_mount
+chroot_mount "${TARGET}"
 
 sudo chroot "${TARGET}" apt-get update
 sudo chroot "${TARGET}" apt-get --assume-yes dist-upgrade
@@ -110,4 +116,8 @@ sudo chroot "${TARGET}" /usr/share/baseimage-helpers/apt-cleanup
 for variant in variants/*
 do
     echo "I: Generate variant \"${variant}\"..."
+    for script in variants/${variant}/*.sh
+    do
+        echo "D: run script ${script}..."
+    done
 done
