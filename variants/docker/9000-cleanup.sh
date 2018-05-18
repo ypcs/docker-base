@@ -16,4 +16,4 @@ rm -rf /usr/share/locale/*
 rm -rf /usr/share/man/*
 EOF
 
-sudo chroot "${TARGET}.docker" sh /usr/share/baseimage-helpers/cleanup.d/docker.sh
+sudo chroot "${TARGET}.docker" sh /usr/share/baseimage-helpers/apt-cleanup.d/docker.sh
