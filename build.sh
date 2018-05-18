@@ -64,10 +64,10 @@ HELPERDIR="${TARGET}/usr/share/baseimage-helpers"
 sudo mkdir -p "${HELPERDIR}"
 for helper in apt-cleanup apt-setup apt-upgrade
 do
-    cp helpers/template "${HELPERDIR}/${helper}"
+    sudo cp helpers/template "${HELPERDIR}/${helper}"
     sudo chmod +x "${HELPERDIR}/${helper}"
 done
-cp -R helpers/*.d "${HELPERDIR}/"
+sudo cp -R helpers/*.d "${HELPERDIR}/"
 
 # Generate sources.list
 echo "I: Generate sources.list..."
