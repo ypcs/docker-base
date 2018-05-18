@@ -9,11 +9,11 @@ case "${SUITE}"
 in
     wheezy|jessie|stretch|buster|sid)
         DISTRIBUTION="debian"
-        MIRROR="http://deb.debian.org/debian"
+        MIRROR="http://127.0.0.1:3142/deb.debian.org/debian"
         ;;
     artful|bionic|trusty|xenial)
         DISTRIBUTION="ubuntu"
-        MIRROR="http://archive.ubuntu.com/ubuntu"
+        MIRROR="http://127.0.0.1:3142/archive.ubuntu.com/ubuntu"
         ;;
     *)
         echo "Invalid suite: ${SUITE}"
