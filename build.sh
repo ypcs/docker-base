@@ -61,7 +61,7 @@ echo "I: Add helper scripts..."
 HELPERDIR="${TARGET}/usr/share/baseimage-helpers"
 sudo mkdir -p "${HELPERDIR}"
 sudo cp helpers/* "${HELPERDIR}/"
-sudo chmod +x "${HELPERDIR}/*"
+sudo chmod -R +x "${HELPERDIR}/"
 
 # Generate sources.list
 echo "I: Generate sources.list..."
@@ -69,13 +69,13 @@ SOURCESLIST="${TARGET}/etc/apt/sources.list"
 case "${DISTRIBUTION}"
 in
     debian)
-        cat > "${SOURCESLIST}" << EOF
+        cat << EOF |sudo tee "${SOURCESLIST}"
 deb ${MIRROR} ${SUITE} main
 #deb-src ${MIRROR} ${SUITE} main
 EOF
         if [ "${SUITE}" != "sid" ]
         then
-            cat >> "${SOURCESLIST}" << EOF
+            cat << EOF |sudo tee -a "${SOURCESLIST}"
 deb ${MIRROR} ${SUITE}-updates main
 #deb-src ${MIRROR} ${SUITE}-updates main
 deb ${MIRROR}-security ${SUITE}/updates main
@@ -84,24 +84,30 @@ EOF
         fi
         ;;
     ubuntu)
-        cat > "${SOURCESLIST}" << EOF
+        cat << EOF |sudo tee "${SOURCESLIST}"
 deb ${MIRROR} ${SUITE} main
 deb ${MIRROR} ${SUITE}-security main
 deb ${MIRROR} ${SUITE}-updates main
-        EOF
+EOF
         ;;
     *)
         echo "Invalid distribution: ${DISTRIBUTION}"
         exit 1
+        ;;
 esac
 
 # Disable translations
-cat > "${TARGET}/etc/apt/apt.conf.d/99translations" << EOF
+cat << EOF |sudo tee "${TARGET}/etc/apt/apt.conf.d/99translations"
 Acquire::Languages "none";
 EOF
 
 chroot_mount
 
-chroot "${TARGET}" apt-get update
-chroot "${TARGET}" apt-get --assume-yes dist-upgrade
-chroot "${TARGET}" /usr/share/baseimage-helpers/apt-cleanup
+sudo chroot "${TARGET}" apt-get update
+sudo chroot "${TARGET}" apt-get --assume-yes dist-upgrade
+sudo chroot "${TARGET}" /usr/share/baseimage-helpers/apt-cleanup
+
+for variant in variants/*
+do
+    echo "I: Generate variant \"${variant}\"..."
+done
