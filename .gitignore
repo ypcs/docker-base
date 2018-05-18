@@ -2,3 +2,5 @@ chroot-*
 *~
 *.swp
 *.tar
+
+baseimage.*
