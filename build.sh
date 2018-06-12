@@ -49,6 +49,9 @@ chroot_umount() {
 cleanup() {
     echo "I: Doing cleanup..."
     chroot_umount "${TARGET}"
+    unset DISTRIBUTION
+    unset SUITE
+    unset TARGET
 }
 
 trap cleanup EXIT
@@ -126,7 +129,3 @@ do
          sh "${script}"
     done
 done
-
-unset DISTRIBUTION
-unset SUITE
-unset TARGET
