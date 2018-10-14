@@ -38,20 +38,19 @@ Acquire::Languages "none";
 EOF
 
 cat > /etc/dpkg/dpkg.cfg.d/99docker << EOF
-path-exclude=/usr/share/man/*
+path-exclude=/usr/share/man/man1/*
+path-exclude=/usr/share/man/man2/*
+path-exclude=/usr/share/man/man3/*
+path-exclude=/usr/share/man/man4/*
+path-exclude=/usr/share/man/man5/*
+path-exclude=/usr/share/man/man6/*
+path-exclude=/usr/share/man/man7/*
+path-exclude=/usr/share/man/man8/*
+path-exclude=/usr/share/man/man9/*
 path-exclude=/usr/share/doc/*
 path-exclude=/usr/share/locale/*
 path-exclude=/usr/share/gnome/help/*/*
 path-exclude=/usr/share/omf/*/*-*.emf
-path-include=/usr/share/man/man1
-path-include=/usr/share/man/man2
-path-include=/usr/share/man/man3
-path-include=/usr/share/man/man4
-path-include=/usr/share/man/man5
-path-include=/usr/share/man/man6
-path-include=/usr/share/man/man7
-path-include=/usr/share/man/man8
-path-include=/usr/share/man/man9
 path-include=/usr/share/locale/locale.alias
 path-include=/usr/share/locale/en/*
 path-include=/usr/share/locale/en_US.UTF-8/*
