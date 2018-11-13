@@ -38,15 +38,15 @@ Acquire::Languages "none";
 EOF
 
 cat > /etc/dpkg/dpkg.cfg.d/99docker << EOF
-path-exclude=/usr/share/man/man1/*
-path-exclude=/usr/share/man/man2/*
-path-exclude=/usr/share/man/man3/*
-path-exclude=/usr/share/man/man4/*
-path-exclude=/usr/share/man/man5/*
-path-exclude=/usr/share/man/man6/*
-path-exclude=/usr/share/man/man7/*
-path-exclude=/usr/share/man/man8/*
-path-exclude=/usr/share/man/man9/*
+#path-exclude=/usr/share/man/man1/*
+#path-exclude=/usr/share/man/man2/*
+#path-exclude=/usr/share/man/man3/*
+#path-exclude=/usr/share/man/man4/*
+#path-exclude=/usr/share/man/man5/*
+#path-exclude=/usr/share/man/man6/*
+#path-exclude=/usr/share/man/man7/*
+#path-exclude=/usr/share/man/man8/*
+#path-exclude=/usr/share/man/man9/*
 path-exclude=/usr/share/doc/*
 path-exclude=/usr/share/locale/*
 path-exclude=/usr/share/gnome/help/*/*
@@ -62,9 +62,6 @@ path-include=/usr/share/locale/all_languages
 path-include=/usr/share/locale/currency/*
 path-include=/usr/share/locale/l10n/*
 EOF
-
-# create missing directories, postgres installation fails without these
-mkdir -p /usr/share/man/man{1,2,3,4,5,6,7,8}
 
 cat > /usr/local/sbin/docker-upgrade << EOF
 #!/bin/sh
