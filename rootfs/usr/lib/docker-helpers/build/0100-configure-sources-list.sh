@@ -1,11 +1,16 @@
 #!/bin/sh
 set -e
 
-. /etc/os-release
+if [ -z "${DISTRIBUTION}" ]
+then
+    . /etc/os-release
+    DISTRIBUTION="${ID:-debian}"
+fi
 
-DISTRIBUTION="${ID:-debian}"
-VERSION="${VERSION:-sid}"
-CODENAME="$(echo "${VERSION}" |awk '{print $NF}' |tr -d '()' |tr '[A-Z]' '[a-z]')"
+if [ -z "${CODENAME}" ]
+then
+    CODENAME="${CODENAME:-sid}"
+fi
 
 # Default mirrors
 DEBIAN_MIRROR="${DEBIAN_MIRROR:-http://deb.debian.org/debian}"
