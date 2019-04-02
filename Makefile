@@ -3,7 +3,7 @@ NAMESPACE = ypcs
 DEBIAN_SUITES = stretch buster sid
 DEBIAN_MIRROR ?= http://deb.debian.org/debian
 
-UBUNTU_SUITES = bionic xenial
+UBUNTU_SUITES = bionic xenial cosmic disco
 UBUNTU_MIRROR ?= http://archive.ubuntu.com/ubuntu
 
 SUDO = /usr/bin/sudo
