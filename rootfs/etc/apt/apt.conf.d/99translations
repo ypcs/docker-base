@@ -1,0 +1,2 @@
+# Don't acquire translation files
+Acquire::Languages "none";

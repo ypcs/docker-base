@@ -11,7 +11,7 @@ DEBOOTSTRAP = /usr/sbin/debootstrap
 DEBOOTSTRAP_FLAGS = --variant=minbase
 TAR = /bin/tar
 
-all: $(DEBIAN_SUITES) $(UBUNTU_SUITES)
+all: clean $(DEBIAN_SUITES) $(UBUNTU_SUITES)
 
 push:
 	docker push $(NAMESPACE)/debian
@@ -20,35 +20,34 @@ push:
 clean:
 	rm -rf *.tar chroot-*
 
-$(DEBIAN_SUITES): % : debian-%.tar
+$(DEBIAN_SUITES): % : debian-%.tar import-debian-%
 
-$(UBUNTU_SUITES): % : ubuntu-%.tar
+$(UBUNTU_SUITES): % : ubuntu-%.tar import-ubuntu-%
 
 %.tar: chroot-%
 	$(TAR) -C $< -c . -f $@
 
+import-debian-%: debian-%.tar
+	docker import - "$(NAMESPACE)/debian:$*" < $<
+
+import-ubuntu-%: ubuntu-%.tar
+	docker import - "$(NAMESPACE)/ubuntu:$*" < $<
+
+push-debian-%: import-debian-%
+	docker push "$(NAMESPACE)/debian:$*"
+
+push-ubuntu-%: import-ubuntu-%
+	docker push "$(NAMESPACE)/ubuntu:$*"
+
 chroot-debian-%:
 	$(DEBOOTSTRAP) $(DEBOOTSTRAP_FLAGS) $* $@ $(DEBIAN_MIRROR)
-	mkdir -p $@/usr/lib/docker-helpers
-	cp helpers/* $@/usr/lib/docker-helpers/
-	chmod +x $@/usr/lib/docker-helpers/*
-	cp setup.sh $@/tmp/setup.sh
-	chmod +x $@/tmp/setup.sh
-	chroot $@ /tmp/setup.sh debian $* $(DEBIAN_MIRROR)
-	rm -f $@/tmp/setup.sh
+	cp -a rootfs/* $@/
+	chroot $@ bash -c 'UBUNTU_MIRROR="$(UBUNTU_MIRROR)" run-parts --verbose --report --exit-on-error --regex ".*\.sh$$" /usr/lib/docker-helpers/build'
 
 chroot-ubuntu-%:
 	$(DEBOOTSTRAP) $(DEBOOTSTRAP_FLAGS) $* $@ $(UBUNTU_MIRROR)
-	mkdir -p $@/usr/lib/docker-helpers
-	cp helpers/* $@/usr/lib/docker-helpers/
-	chmod +x $@/usr/lib/docker-helpers/*
-	cp setup.sh $@/tmp/setup.sh
-	chmod +x $@/tmp/setup.sh
-	chroot $@ /tmp/setup.sh ubuntu $* $(UBUNTU_MIRROR)
-	rm -f $@/tmp/setup.sh
-
-import-all:
-	./import.sh
+	cp -a rootfs/* $@/
+	chroot $@ bash -c 'DEBIAN_MIRROR="$(DEBIAN_MIRROR)" run-parts --verbose --report --exit-on-error --regex ".*\.sh$$" /usr/lib/docker-helpers/build'
 
 images:
 	$(MAKE) -C $@
