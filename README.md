@@ -9,4 +9,4 @@ This creates Docker images and also exports them as `.tar` archives
 
     sudo make <wheezy|jessie|stretch|sid>
 
-
+Images are also imported into Docker, by default with namespace `ypcs/{debian,ubuntu}:{codename}`
