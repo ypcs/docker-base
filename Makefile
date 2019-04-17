@@ -46,7 +46,8 @@ chroot-debian-%:
 
 chroot-ubuntu-%:
 	$(DEBOOTSTRAP) $(DEBOOTSTRAP_FLAGS) $* $@ $(UBUNTU_MIRROR)
-	cp -a rootfs/* $@/
+	rsync --chown=root:root -avh rootfs/* $@/
+	#find rootfs/ -type f -exec install -u root -g root -m 0644 "{}" "$@/{}" \;
 	chroot $@ bash -c 'DEBIAN_MIRROR="$(DEBIAN_MIRROR)" DISTRIBUTION="ubuntu" CODENAME="$*" run-parts --verbose --report --exit-on-error --regex ".*\.sh$$" /usr/lib/docker-helpers/build'
 
 images:
