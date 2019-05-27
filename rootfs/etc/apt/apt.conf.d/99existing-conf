@@ -1,0 +1,8 @@
+#
+# Force dpkg to reuse existing configurations and never overwrite with new
+# changes. If there is no existing configuration, just use defaults.
+#
+Dpkg::Options {
+    "--force-confdef";
+    "--force-confold";
+}
