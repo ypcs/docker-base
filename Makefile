@@ -41,13 +41,12 @@ push-ubuntu-%: import-ubuntu-%
 
 chroot-debian-%:
 	$(DEBOOTSTRAP) $(DEBOOTSTRAP_FLAGS) $* $@ $(DEBIAN_MIRROR)
-	cp -a rootfs/* $@/
+	rsync --chown=root:root -avh rootfs/* $@/
 	chroot $@ bash -c 'UBUNTU_MIRROR="$(UBUNTU_MIRROR)" DISTRIBUTION="debian" CODENAME="$*" run-parts --verbose --report --exit-on-error --regex ".*\.sh$$" /usr/lib/docker-helpers/build'
 
 chroot-ubuntu-%:
 	$(DEBOOTSTRAP) $(DEBOOTSTRAP_FLAGS) $* $@ $(UBUNTU_MIRROR)
 	rsync --chown=root:root -avh rootfs/* $@/
-	#find rootfs/ -type f -exec install -u root -g root -m 0644 "{}" "$@/{}" \;
 	chroot $@ bash -c 'DEBIAN_MIRROR="$(DEBIAN_MIRROR)" DISTRIBUTION="ubuntu" CODENAME="$*" run-parts --verbose --report --exit-on-error --regex ".*\.sh$$" /usr/lib/docker-helpers/build'
 
 images:
