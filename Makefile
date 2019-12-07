@@ -11,11 +11,16 @@ DEBOOTSTRAP = /usr/sbin/debootstrap
 DEBOOTSTRAP_FLAGS = --variant=minbase
 TAR = /bin/tar
 
+DOCKER ?= docker
+
 all: clean $(DEBIAN_SUITES) $(UBUNTU_SUITES)
 
+alllocalmirror: clean
+	$(MAKE) DEBIAN_MIRROR=http://127.0.0.1:3142/deb.debian.org/debian UBUNTU_MIRROR=http://127.0.0.1:3142/archive.ubuntu.com/ubuntu DOCKER="/bin/true"
+
 push:
-	docker push $(NAMESPACE)/debian
-	docker push $(NAMESPACE)/ubuntu
+	$(DOCKER) push $(NAMESPACE)/debian
+	$(DOCKER) push $(NAMESPACE)/ubuntu
 
 clean:
 	rm -rf *.tar chroot-*
@@ -28,16 +33,16 @@ $(UBUNTU_SUITES): % : ubuntu-%.tar import-ubuntu-%
 	$(TAR) -C $< -c . -f $@
 
 import-debian-%: debian-%.tar
-	docker import - "$(NAMESPACE)/debian:$*" < $<
+	$(DOCKER) import - "$(NAMESPACE)/debian:$*" < $<
 
 import-ubuntu-%: ubuntu-%.tar
-	docker import - "$(NAMESPACE)/ubuntu:$*" < $<
+	$(DOCKER) import - "$(NAMESPACE)/ubuntu:$*" < $<
 
 push-debian-%: import-debian-%
-	docker push "$(NAMESPACE)/debian:$*"
+	$(DOCKER) push "$(NAMESPACE)/debian:$*"
 
 push-ubuntu-%: import-ubuntu-%
-	docker push "$(NAMESPACE)/ubuntu:$*"
+	$(DOCKER) push "$(NAMESPACE)/ubuntu:$*"
 
 chroot-debian-%:
 	$(DEBOOTSTRAP) $(DEBOOTSTRAP_FLAGS) $* $@ $(DEBIAN_MIRROR)
