@@ -23,7 +23,7 @@ push:
 	$(DOCKER) push $(NAMESPACE)/ubuntu
 
 clean:
-	rm -rf *.tar chroot-*
+	rm -rf *.tar *.tar.gz chroot-*
 
 $(DEBIAN_SUITES): % : debian-%.tar import-debian-%
 
@@ -31,6 +31,7 @@ $(UBUNTU_SUITES): % : ubuntu-%.tar import-ubuntu-%
 
 %.tar: chroot-%
 	$(TAR) -C $< -c . -f $@
+	./scripts/lxc-metadata.sh $(patsubst %.tar,%,$@)
 
 import-debian-%: debian-%.tar
 	$(DOCKER) import - "$(NAMESPACE)/debian:$*" < $<

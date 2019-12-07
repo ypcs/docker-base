@@ -4,6 +4,19 @@ set -e
 DISTRO="$1"
 RELEASE="$2"
 
+[ -z "${DISTRO}" ] && exit 1
+
+if [ -z "${RELEASE}" ]
+then
+    TMP="${DISTRO}"
+    DISTRO="$(echo "${TMP}" |cut -d'-' -f1)"
+    RELEASE="$(echo "${TMP}" |cut -d'-' -f2)"
+fi
+
+[ -z "${RELEASE}" ] && exit 1
+
+echo "Generate LXC metadata: ${DISTRO} ${RELEASE}"
+
 TEMPDIR="$(mktemp --tmpdir --directory lxc-metadata.XXXXXX)"
 
 cat > "${TEMPDIR}/metadata.yaml" << EOF

@@ -2,3 +2,4 @@ chroot-*
 *~
 *.swp
 *.tar
+*.tar.gz
