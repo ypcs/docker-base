@@ -12,3 +12,22 @@ This creates Docker images and also exports them as `.tar` archives
     sudo make <wheezy|jessie|stretch|sid>
 
 Images are also imported into Docker, by default with namespace `ypcs/{debian,ubuntu}:{codename}`
+
+## Docker
+You may import images using
+
+    docker import - <image> < <rootfs tar>
+
+eg.
+
+    docker import - ypcs/debian:sid < debian-sid.tar
+
+
+## LXC
+To import images into LXC, execute
+
+    lxc image import <metadata .tar.gz> <rootfs tar> --alias <name of the image>
+
+eg.
+
+    lxc image import debian-sid_metadata.tar.gz debian-sid.tar --alias debian-sid
