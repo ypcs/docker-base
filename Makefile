@@ -6,6 +6,8 @@ DEBIAN_MIRROR ?= http://deb.debian.org/debian
 UBUNTU_SUITES = bionic xenial cosmic disco eoan
 UBUNTU_MIRROR ?= http://archive.ubuntu.com/ubuntu
 
+APT_PROXY ?= 127.0.0.1:3142
+
 SUDO = /usr/bin/sudo
 DEBOOTSTRAP = /usr/sbin/debootstrap
 DEBOOTSTRAP_FLAGS = --variant=minbase
@@ -16,7 +18,7 @@ DOCKER ?= docker
 all: clean $(DEBIAN_SUITES) $(UBUNTU_SUITES)
 
 alllocalmirror: clean
-	$(MAKE) DEBIAN_MIRROR=http://127.0.0.1:3142/deb.debian.org/debian UBUNTU_MIRROR=http://127.0.0.1:3142/archive.ubuntu.com/ubuntu DOCKER="/bin/true"
+	$(MAKE) DEBIAN_MIRROR=http://$(APT_PROXY)/deb.debian.org/debian UBUNTU_MIRROR=http://$(APT_PROXY)/archive.ubuntu.com/ubuntu DOCKER="/bin/true"
 
 push:
 	$(DOCKER) push $(NAMESPACE)/debian
