@@ -57,4 +57,4 @@ esac
 
 cat /etc/apt/sources.list
 
-/usr/lib/docker-helpers/apt-setup
+/usr/lib/baseimage-helpers/apt-setup
