@@ -45,12 +45,12 @@ push-ubuntu-%: import-ubuntu-%
 chroot-debian-%:
 	$(DEBOOTSTRAP) $(DEBOOTSTRAP_FLAGS) $* $@ $(DEBIAN_MIRROR)
 	rsync --chown=root:root -avh rootfs/* $@/
-	chroot $@ bash -c 'UBUNTU_MIRROR="$(UBUNTU_MIRROR)" DISTRIBUTION="debian" CODENAME="$*" run-parts --verbose --report --exit-on-error --regex ".*\.sh$$" /usr/lib/baseimage-helpers/build'
+	chroot $@ bash -c 'DEBIAN_MIRROR="$(DEBIAN_MIRROR)" DISTRIBUTION="debian" CODENAME="$*" /bin/bash /usr/lib/baseimage-helpers/build/execute'
 
 chroot-ubuntu-%:
 	$(DEBOOTSTRAP) $(DEBOOTSTRAP_FLAGS) $* $@ $(UBUNTU_MIRROR)
 	rsync --chown=root:root -avh rootfs/* $@/
-	chroot $@ bash -c 'DEBIAN_MIRROR="$(DEBIAN_MIRROR)" DISTRIBUTION="ubuntu" CODENAME="$*" run-parts --verbose --report --exit-on-error --regex ".*\.sh$$" /usr/lib/baseimage-helpers/build'
+	chroot $@ bash -c 'UBUNTU_MIRROR="$(UBUNTU_MIRROR)" DISTRIBUTION="ubuntu" CODENAME="$*" /bin/bash /usr/lib/baseimage-helpers/build/execute'
 
 images:
 	$(MAKE) -C $@

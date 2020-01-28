@@ -1,0 +1,32 @@
+#!/bin/sh
+set -e
+
+SRCDIR="/usr/lib/baseimage-helpers/build"
+TEMPDIR="$(mktemp --tmpdir --directory build-scripts.XXXXXX)"
+
+cp -a ${SRCDIR}/*.sh "${TEMPDIR}/"
+
+if [ -d "${SRCDIR}/distros/${DISTRIBUTION}" ]
+then
+    cp -a ${SRCDIR}/distros/${DISTRIBUTION}/*.sh "${TEMPDIR}/" || :
+
+    if [ -d "${SRCDIR}/distros/${DISTRIBUTION}/${RELEASE}" ]
+    then
+        cp -a ${SRCDIR}/distros/${DISTRIBUTION}/${RELEASE}/*.sh "${TEMPDIR}/" || :
+    fi
+fi
+
+export DISTRIBUTION
+export CODENAME
+
+echo "Release: ${DISTRIBUTION}/${CODENAME}"
+
+run-parts \
+    --verbose \
+    --report \
+    --exit-on-error \
+    --regex ".*\.sh$" \
+    "${TEMPDIR}"
+
+rm -rf "${TEMPDIR}"
+rm -rf /usr/lib/baseimage-helpers/build
