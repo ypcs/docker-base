@@ -1,0 +1,4 @@
+[submodule "d-i"]
+	path = d-i
+	url = git@github.com:ypcs/d-i.git
+	branch = gh-pages
