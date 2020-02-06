@@ -31,3 +31,17 @@ To import images into LXC, execute
 eg.
 
     lxc image import debian-sid_metadata.tar.gz debian-sid.tar --alias debian-sid
+
+
+## Misc
+### Install VM from webserver
+
+Use
+
+    http://192.168.122.1:3142/deb.debian.org/debian/dists/stable/main/installer-amd64/
+
+as installer URL and set kernel parameters
+
+    auto debian-installer/locale=en_US.UTF-8 keyboard-configuration/xkb-keymap=us netcfg/choose_interface=auto netcfg/get_hostname=localhost netcfg/get_domain=localdomain url=ypcs.fi
+
+to execute fully automated installation without any prompts. These assume you have local `apt-cacher-ng` instance running at IP 192.168.122.1, which is default network bridge for QEMU/KVM on my env.
